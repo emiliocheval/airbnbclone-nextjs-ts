@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql" // Change to mysql since you're using AWS RDS MySQL
+  url      = env("DATABASE_URL") // Ensure this points to your MySQL database
+}
+
+model Property {
+  id               Int       @id @default(autoincrement())
+  title            String
+  description      String
+  price            Float
+  location         String
+  amenities        Json // Change from String[] to Json
+  houseRules       Json // Change from String[] to Json
+  safetyFeatures   Json // Change from String[] to Json
+  propertyFeatures Json // Change from String[] to Json
+  services         Json // Change from String[] to Json
+  imageUrl         String? // Optional field for imageUrl
+  host             String
+  bookings         Booking[]
+  guests           Int // New field for number of guests
+  bedrooms         Int // New field for number of bedrooms
+  beds             Int // New field for number of beds
+  bathrooms        Int // New field for number of bathrooms
+  reviews          reviews[]
+}
+
+model reviews {
+  id         Int      @id @default(autoincrement()) // Auto-incrementing ID
+  propertyId Int // Foreign key to the Property model
+  rating     Int // Rating of the property (1-5)
+  comment    String // Review text
+  userName   String // Reviewer's name
+  createdAt  DateTime @default(now()) // Timestamp when the review was created
+
+  property Property @relation(fields: [propertyId], references: [id]) // Relation to Property model
+}
+
+model User {
+  id          String    @id @default(uuid()) // Internal user ID (for your app)
+  email       String    @unique
+  clerkUserId String    @unique // Clerk user ID to track users authenticated via Clerk
+  bookings    Booking[]
+}
+
+
+model Booking {
+  id         Int      @id @default(autoincrement())
+  propertyId Int
+  property   Property @relation(fields: [propertyId], references: [id])
+  userId     String // changed from Int to String
+  user       User     @relation(fields: [userId], references: [id])
+  checkIn    DateTime
+  checkOut   DateTime
+  guests     Int // New field for the number of guests
+}
