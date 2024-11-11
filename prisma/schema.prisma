@@ -32,6 +32,7 @@ model Property {
   beds             Int // New field for number of beds
   bathrooms        Int // New field for number of bathrooms
   reviews          reviews[]
+  favorites User[]     @relation("UserFavorites")
 }
 
 model reviews {
@@ -41,15 +42,16 @@ model reviews {
   comment    String // Review text
   userName   String // Reviewer's name
   createdAt  DateTime @default(now()) // Timestamp when the review was created
-
   property Property @relation(fields: [propertyId], references: [id]) // Relation to Property model
 }
 
 model User {
-  id          String    @id @default(uuid()) // Internal user ID (for your app)
-  email       String    @unique
-  clerkUserId String    @unique // Clerk user ID to track users authenticated via Clerk
+  id          String   @id @default(uuid()) // Internal user ID (for your app)
+  email       String   @unique
+  clerkUserId String   @unique // Clerk user ID to track users authenticated via Clerk
+  username    String   @unique
   bookings    Booking[]
+  favorites Property[] @relation("UserFavorites")
 }
 
 

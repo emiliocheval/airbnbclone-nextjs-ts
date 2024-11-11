@@ -14,6 +14,7 @@ const HomePage: React.FC = () => {
   const [filters, setFilters] = useState<any>({}); // State to hold the applied filters
 
   const { user, isLoaded } = useUser(); // Use useUser to get the user object
+  
 
   useEffect(() => {
     const fetchProperties = async () => {
@@ -35,10 +36,12 @@ const HomePage: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // Run only after user data is loaded
     if (isLoaded && user) {
       const checkUser = async () => {
         try {
+          // Use the username directly from Clerk
+          const username = user.username || 'anonymous'; // Use username or fallback to 'anonymous'
+    
           const response = await fetch("/api/auth/check-user", {
             method: "POST",
             headers: {
@@ -47,9 +50,10 @@ const HomePage: React.FC = () => {
             body: JSON.stringify({
               clerkUserId: user.id,
               email: user.emailAddresses[0]?.emailAddress,
+              username: username, // Pass the username directly
             }),
           });
-
+    
           if (response.ok) {
             const data = await response.json();
             if (!data.exists) {
@@ -62,6 +66,7 @@ const HomePage: React.FC = () => {
                 body: JSON.stringify({
                   clerkUserId: user.id,
                   email: user.emailAddresses[0]?.emailAddress,
+                  username: username, // Pass the username directly
                 }),
               });
             }
@@ -72,10 +77,12 @@ const HomePage: React.FC = () => {
           console.error("Error checking user:", error);
         }
       };
-
+  
       checkUser();
     }
   }, [isLoaded, user]);
+  
+  
 
   const handleApplyFilters = (appliedFilters: any) => {
     setFilters(appliedFilters);

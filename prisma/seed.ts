@@ -33,7 +33,7 @@ async function main() {
             houseRules: ["No Smoking", "No Pets", "No Parties"],
             safetyFeatures: ["Smoke Detector", "Fire Extinguisher", "Security Cameras"],
             propertyFeatures: ["City View", "Penthouse Suite"],
-            services: ["Concierge", "In-house Spa"],
+            services: ["Concierge", "In house Spa"],
             price: 7500,
             location: "New York City, NY, USA",
             host: "Emily Taylor",

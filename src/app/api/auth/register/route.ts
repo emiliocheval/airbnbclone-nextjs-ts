@@ -1,12 +1,10 @@
-// src/app/api/auth/register/route.ts
-
 import { NextApiResponse } from 'next';
-import prisma from '../../../../../prisma/client'; // Ensure you have a Prisma client set up
+import prisma from '../../../../../prisma/client'; // Ensure Prisma client is properly imported
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
   try {
-    const { clerkUserId, email } = await req.json(); // Parse JSON from the request body
+    const { clerkUserId, email, username } = await req.json(); // Parse JSON from the request body
 
     // Check if the user already exists
     const existingUser = await prisma.user.findUnique({
@@ -22,8 +20,8 @@ export async function POST(req: Request) {
       data: {
         clerkUserId,
         email,
-        // Add any other fields you need to store
-      },
+        username: username || 'anonymous', // Add username with fallback to 'anonymous'
+      } as any, // Cast the data to `any` type if you continue to face the type issue
     });
 
     return NextResponse.json(
@@ -35,5 +33,3 @@ export async function POST(req: Request) {
     return NextResponse.json({ message: 'Error registering user' }, { status: 500 });
   }
 }
-
-

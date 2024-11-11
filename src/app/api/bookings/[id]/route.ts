@@ -1,35 +1,71 @@
 // src/app/api/bookings/[id]/route.ts
+import prisma from "../../../../../prisma/client"; // Adjust this path as necessary
 
-import prisma from '../../../../../prisma/client'; // Adjust import path
-import { NextResponse, NextRequest } from 'next/server'; // Import NextRequest for type compatibility
-import { getAuth } from '@clerk/nextjs/server'; // Use getAuth from Clerk's server import
+export async function GET(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params; // Access the dynamic `id` from params
 
-export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  const bookingId = parseInt(params.id);
-  const { userId } = getAuth(req);
-
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  if (!id) {
+    return new Response(JSON.stringify({ error: "Invalid ID" }), {
+      status: 400,
+    });
   }
 
   try {
     const booking = await prisma.booking.findUnique({
-      where: { id: bookingId },
-      include: { property: true },
+      where: { id: Number(id) },
+      include: { property: true }, // Include related property data
     });
 
     if (!booking) {
-      return NextResponse.json({ error: 'Booking not found' }, { status: 404 });
+      return new Response(JSON.stringify({ error: "Booking not found" }), {
+        status: 404,
+      });
     }
 
-    // Check if the booking belongs to the authenticated user
-    if (booking.userId !== userId) {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-
-    return NextResponse.json(booking);
+    return new Response(JSON.stringify(booking), {
+      status: 200,
+    });
   } catch (error) {
     console.error("Error fetching booking:", error);
-    return NextResponse.json({ error: 'Server error' }, { status: 500 });
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+    });
+  }
+}
+
+// Delete booking by ID
+export async function DELETE(request: Request, context: { params: { id: string } }) {
+  const { id } = context.params; // Access the dynamic `id` from params
+
+  if (!id) {
+    return new Response(JSON.stringify({ error: "Invalid ID" }), {
+      status: 400,
+    });
+  }
+
+  try {
+    const bookingToDelete = await prisma.booking.findUnique({
+      where: { id: Number(id) },
+    });
+
+    if (!bookingToDelete) {
+      return new Response(JSON.stringify({ error: "Booking not found" }), {
+        status: 404,
+      });
+    }
+
+    // Delete the booking
+    await prisma.booking.delete({
+      where: { id: Number(id) },
+    });
+
+    return new Response(JSON.stringify({ message: "Booking deleted successfully" }), {
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error deleting booking:", error);
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+    });
   }
 }

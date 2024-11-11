@@ -8,6 +8,10 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Roboto', 'sans-serif'], // Default font for body
+        heading: ['Open Sans', 'sans-serif'], // Font for headings
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
