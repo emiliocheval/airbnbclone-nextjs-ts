@@ -3,6 +3,7 @@ import { Booking } from './booking';
 import { User } from './user';
 
 export interface Property {
+    property: any;
     features: any;
     id: number;  
     title: string;  

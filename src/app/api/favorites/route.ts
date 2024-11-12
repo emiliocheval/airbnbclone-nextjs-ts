@@ -1,88 +1,140 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../prisma/client';
+import { NextRequest } from 'next/server';
 
-// POST - Add/Remove favorite
-export async function POST(request: Request) {
+
+export async function POST(req: NextRequest) {
+  const { userId, propertyId } = await req.json();
+
   try {
-    const { userId, propertyId } = await request.json();
-
-    // Validate incoming parameters
-    if (!userId || !propertyId) {
-      return NextResponse.json({ message: "Missing parameters" }, { status: 400 });
-    }
-
-    // Check if user exists and retrieve current favorites
+    // Find the internal user `id` using Clerk's `userId` (clerkUserId)
     const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { favorites: true },
+      where: { clerkUserId: userId },
     });
 
     if (!user) {
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: 'User does not exist' }, { status: 400 });
     }
 
-    // Check if the property is already a favorite
-    const isFavorite = user.favorites.some((property) => property.id === propertyId);
+    // Check if the favorite already exists
+    const existingFavorite = await prisma.favorite.findFirst({
+      where: {
+        userId: user.id,
+        propertyId,
+      },
+    });
 
-    if (isFavorite) {
-      // Remove from favorites
-      await prisma.user.update({
-        where: { id: userId },
-        data: {
-          favorites: {
-            disconnect: { id: propertyId },
-          },
+    if (existingFavorite) {
+      // If it exists, delete the favorite
+      await prisma.favorite.delete({
+        where: {
+          id: existingFavorite.id,
         },
       });
-      return NextResponse.json({ message: "Favorite removed", isFavorited: false }, { status: 200 });
+      return NextResponse.json({ message: 'Favorite removed' }, { status: 200 });
     } else {
-      // Add to favorites
-      await prisma.user.update({
-        where: { id: userId },
+      // If it doesn't exist, create a new favorite
+      const favorite = await prisma.favorite.create({
         data: {
-          favorites: {
-            connect: { id: propertyId },
-          },
+          userId: user.id,
+          propertyId,
         },
       });
-      return NextResponse.json({ message: "Favorite added", isFavorited: true }, { status: 200 });
+      return NextResponse.json(favorite, { status: 201 });
     }
   } catch (error) {
-    console.error("Error managing favorites:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    console.error('Error in POST route:', error);
+    return NextResponse.json({ error: 'Error toggling favorite' }, { status: 500 });
   }
 }
 
-// GET - Retrieve favorites for a user
-export async function GET(request: Request) {
+// Add DELETE handler
+export async function DELETE(req: NextRequest) {
+  const { userId, propertyId } = await req.json();
+
   try {
-    // Extract query parameters from the URL
-    const url = new URL(request.url);
-    const userId = url.searchParams.get('userId');
-
-    // Log the incoming parameters for debugging
-    console.log("Received parameters:", { userId });
-
-    // Validate parameters
-    if (!userId) {
-      return NextResponse.json({ message: "Missing userId" }, { status: 400 });
-    }
-
-    // Check if user exists and retrieve current favorites
+    // Find the internal user `id` using Clerk's `userId` (clerkUserId)
     const user = await prisma.user.findUnique({
-      where: { id: userId },
-      include: { favorites: true },
+      where: { clerkUserId: userId },
     });
 
     if (!user) {
-      console.log("User not found:", userId); // Log user not found
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: 'User does not exist' }, { status: 400 });
     }
 
-    // Return the list of favorites (including their ids)
-    return NextResponse.json({ favorites: user.favorites }, { status: 200 });
+    // Check if the favorite exists
+    const existingFavorite = await prisma.favorite.findFirst({
+      where: {
+        userId: user.id,
+        propertyId,
+      },
+    });
+
+    if (!existingFavorite) {
+      return NextResponse.json({ error: 'Favorite not found' }, { status: 404 });
+    }
+
+    // Delete the favorite
+    await prisma.favorite.delete({
+      where: {
+        id: existingFavorite.id,
+      },
+    });
+
+    return NextResponse.json({ message: 'Favorite removed' }, { status: 200 });
+  } catch (error) {
+    console.error('Error in DELETE route:', error);
+    return NextResponse.json({ error: 'Error removing favorite' }, { status: 500 });
+  }
+}
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const clerkUserId = url.searchParams.get("userId");
+
+  if (!clerkUserId) {
+    return new Response(JSON.stringify({ error: "Invalid or missing userId" }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  try {
+    // Fetch the internal `userId` from Clerk's `userId`
+    const user = await prisma.user.findUnique({
+      where: { clerkUserId },
+    });
+
+    if (!user) {
+      return new Response(JSON.stringify({ error: "User not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    // Now fetch the favorites for this internal user ID
+    const favorites = await prisma.favorite.findMany({
+      where: { userId: user.id }, // use internal user ID
+      include: {
+        property: {
+          include: {
+            reviews: true, // Include reviews here
+          },
+        },
+      },
+    });
+
+    return new Response(JSON.stringify(favorites), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
   } catch (error) {
     console.error("Error fetching favorites:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return new Response(JSON.stringify({ error: "Internal server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
+
+

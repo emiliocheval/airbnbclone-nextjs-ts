@@ -32,7 +32,7 @@ model Property {
   beds             Int // New field for number of beds
   bathrooms        Int // New field for number of bathrooms
   reviews          reviews[]
-  favorites User[]     @relation("UserFavorites")
+  Favorite Favorite[]
 }
 
 model reviews {
@@ -51,7 +51,7 @@ model User {
   clerkUserId String   @unique // Clerk user ID to track users authenticated via Clerk
   username    String   @unique
   bookings    Booking[]
-  favorites Property[] @relation("UserFavorites")
+  Favorite Favorite[]
 }
 
 
@@ -64,4 +64,13 @@ model Booking {
   checkIn    DateTime
   checkOut   DateTime
   guests     Int // New field for the number of guests
+}
+
+model Favorite {
+  id         Int      @id @default(autoincrement()) // Auto-incrementing ID for each favorite
+  userId     String   // Foreign key to User
+  propertyId Int      // Foreign key to Property
+  createdAt  DateTime @default(now()) // Timestamp when the favorite was added
+  user       User     @relation(fields: [userId], references: [id]) // Relation to User model
+  property   Property @relation(fields: [propertyId], references: [id]) // Relation to Property model
 }

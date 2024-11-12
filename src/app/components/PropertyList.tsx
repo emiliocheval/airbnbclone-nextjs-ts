@@ -18,19 +18,22 @@ const PropertyList: React.FC<PropertyListProps> = ({ properties }) => {
           price={property.price}
           location={property.location}
           description={property.description}
-          reviews={property.reviews} // Ensure that reviews are passed if available
-          features={property.propertyFeatures} // Pass features directly from property data
-          amenities={property.amenities} // Pass amenities directly if they exist in Property type
-          houseRules={property.houseRules} // Adjust to fit your Property type
-          safetyFeatures={property.safetyFeatures} // Adjust if needed
-          propertyFeatures={property.propertyFeatures}
-          services={property.services}
-          host={property.host}
+          reviews={property.reviews || []} // Ensure reviews default to an empty array
+          features={property.propertyFeatures || []} // Provide default empty array for features
+          amenities={property.amenities || []} // Default to an empty array if amenities not present
+          houseRules={property.houseRules || []} // Default to an empty array for house rules
+          safetyFeatures={property.safetyFeatures || []} // Provide default empty array
+          propertyFeatures={property.propertyFeatures || []} // Ensure default empty array
+          services={property.services || []} // Default empty array for services
+          host={property.host || "Unknown Host"} // Default host name if missing
           guests={property.guests || 0}
           bedrooms={property.bedrooms || 0}
           beds={property.beds || 0}
           bathrooms={property.bathrooms || 0}
-          bookings={property.bookings || []} favorites={[]}        />
+          bookings={property.bookings || []} // Default to an empty array
+          favorites={[]} // Adjust this based on your favorite management strategy
+          isFavorited={false} // Update this based on favorite status if managed by parent
+          property={undefined}        />
       ))}
     </div>
   );
