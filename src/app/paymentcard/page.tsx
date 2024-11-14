@@ -1,13 +1,15 @@
 // pages/payment-card.tsx
-"use client"
+"use client";
 
-import Link from 'next/link';
-import { useState } from 'react';
+import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const PaymentCard: React.FC = () => {
-  const [cardNumber, setCardNumber] = useState('');
-  const [expiryDate, setExpiryDate] = useState('');
-  const [cvv, setCvv] = useState('');
+  const router = useRouter();
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiryDate, setExpiryDate] = useState("");
+  const [cvv, setCvv] = useState("");
 
   return (
     <div className="p-4 max-w-lg mx-auto">
@@ -56,11 +58,13 @@ const PaymentCard: React.FC = () => {
             />
           </div>
 
-          <Link href="/payment">
-            <button type="button" className="w-full bg-black text-white py-3 rounded-lg">
-              Save Card
-            </button>
-          </Link>
+          <button
+            type="button"
+            className="w-full bg-black text-white py-3 rounded-lg"
+            onClick={() => router.back()}
+          >
+            Save Card
+          </button>
         </form>
       </div>
     </div>

@@ -76,15 +76,19 @@ const PropertyCard: React.FC<PropertyCardProps> = ({
   return (
     <div className="relative">
       <Link href={`/properties/${id}`} className="block">
-        <div className="border rounded-lg overflow-hidden shadow-lg">
-          <img src={imageSrc} alt={title} className="w-full h-48 object-cover" />
-          <div className="p-4 flex justify-between items-center">
-            <h2 className="text-lg font-bold">{title}</h2>
-            <span className="text-yellow-500">⭐ {averageRating}</span>
-          </div>
-          <p className="text-gray-600">{location}</p>
-          <p className="text-xl font-semibold">${price}</p>
-        </div>
+      <div className="border rounded-lg overflow-hidden shadow-lg">
+  <img src={imageSrc} alt={title} className="w-full h-48 object-cover" />
+  <div className="p-4">
+    <div className="flex justify-between items-center mb-2">
+      <h2 className="text-lg font-bold">{title}</h2>
+      <span className="text-yellow-500">⭐ {averageRating}</span>
+    </div>
+    <div className="flex-col text-gray-600">
+      <p>{location}</p>
+      <p className="text-xl font-semibold text-black">${price}</p>
+    </div>
+  </div>
+</div>
       </Link>
 
       <button

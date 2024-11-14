@@ -8,4 +8,5 @@ export interface User {
     bookings: Booking[];  // Array of bookings related to this user
     username: string;
     favorites: Property[];
+    profileImageUrl?: string;
 }

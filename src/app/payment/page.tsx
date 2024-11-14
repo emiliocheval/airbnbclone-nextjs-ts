@@ -164,9 +164,9 @@ export default function Payment() {
             Change
           </Link>
           <img
-            src="/placeholder-logo.png" // Placeholder logo path
+            src="https://banner2.cleanpng.com/20180806/cpp/eee8e20f3400c452fc3e03c49ed2fcd1.webp" // Placeholder logo path
             alt="Logo"
-            className="ml-4 w-8 h-8"
+            className="ml-4 w-12 h-8"
           />
         </div>
       </div>

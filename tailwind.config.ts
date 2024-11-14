@@ -14,7 +14,7 @@ const config: Config = {
       },
       colors: {
         background: "var(--background)",
-        foreground: "var(--foreground)",
+        foregrounda: "var(--foreground)",
         'custom-turquoise': '#068488', // Add the custom turquoise color
       },
     },

@@ -5,6 +5,8 @@ import PropertyList from "../app/components/PropertyList";
 import { Property } from "@/types/properties";
 import FilterModal from "../app/components/FilterModal";
 import { useUser } from "@clerk/nextjs";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 
 interface Filters {
   priceRange?: { min: number; max: number };
@@ -120,19 +122,22 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="p-4">
-      <input
-        type="text"
-        placeholder="Search..."
-        className="w-full p-2 mb-4 rounded-md border border-gray-300"
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <button
-        onClick={() => setIsFilterModalOpen(true)}
-        className="mb-4 px-4 py-2 bg-teal-500 text-white rounded-md"
-      >
-        Open Filters
-      </button>
+      <div className="flex items-center mb-4 border border-gray-300 rounded-md">
+        <input
+          type="text"
+          placeholder="Search..."
+          className="w-full p-2 rounded-l-md focus:outline-none"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <button
+          onClick={() => setIsFilterModalOpen(true)}
+          className="p-2 bg-teal-500 text-white rounded-r-md"
+          aria-label="Open Filters"
+        >
+          <FontAwesomeIcon icon={faFilter} />
+        </button>
+      </div>
       <PropertyList properties={filteredProperties} />
       <FilterModal
         isOpen={isFilterModalOpen}
