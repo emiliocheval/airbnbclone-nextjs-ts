@@ -122,13 +122,13 @@ const Trips: React.FC = () => {
       <h1 className="text-3xl font-bold text-center flex-grow">Trips</h1>
       <div className="flex justify-center mb-4 mt-10">
         <button
-          className={`px-8 py-2 rounded-full ${activeTab === 'upcoming' ? 'bg-black text-white' : 'bg-gray-200 text-black'}`}
+          className={`px-8 py-2 rounded-full ${activeTab === 'upcoming' ? 'bg-zinc-800 text-white' : 'bg-gray-200 text-black'}`}
           onClick={() => setActiveTab('upcoming')}
         >
           Upcoming
         </button>
         <button
-          className={`px-8 py-2 rounded-full ${activeTab === 'done' ? 'bg-black text-white' : 'bg-gray-200 text-black'}`}
+          className={`px-8 py-2 rounded-full ${activeTab === 'done' ? 'bg-zinc-800 text-white' : 'bg-gray-200 text-black'}`}
           onClick={() => setActiveTab('done')}
         >
           Done
@@ -166,7 +166,7 @@ const Trips: React.FC = () => {
                 </button>
                 <button
                   onClick={() => handleViewDetails(trip.id)}
-                  className="px-4 py-2 bg-black text-white rounded-full"
+                  className="px-4 py-2 bg-zinc-800 text-white rounded-full"
                 >
                   View Details
                 </button>
@@ -182,7 +182,7 @@ const Trips: React.FC = () => {
                 </button>
                 <button
                   onClick={() => handleBookAgain(trip)}
-                  className="px-4 py-2 bg-black text-white rounded-full"
+                  className="px-4 py-2 bg-zinc-800 text-white rounded-full"
                 >
                   Book Again
                 </button>

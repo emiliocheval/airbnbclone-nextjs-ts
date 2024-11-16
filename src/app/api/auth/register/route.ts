@@ -1,4 +1,4 @@
-import { NextApiResponse } from 'next';
+
 import prisma from '../../../../../prisma/client'; // Ensure Prisma client is properly imported
 import { NextResponse } from 'next/server';
 

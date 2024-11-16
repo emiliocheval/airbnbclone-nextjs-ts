@@ -151,7 +151,7 @@ export default function BookingRequest() {
       <div className="mt-6 flex justify-center">
         <button
           onClick={handlePaymentClick} // Trigger the payment navigation with query parameter
-          className="px-6 py-3 bg-black text-white rounded-md uppercase">
+          className="px-20 py-3 bg-zinc-800 text-white rounded-md uppercase">
           Payment
         </button>
       </div>

@@ -64,7 +64,7 @@ const Favorites: React.FC = () => {
 
   return (
     <div className="max-w-2xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-8">Favorites</h1>
+      <h1 className="text-3xl font-semibold text-center mb-8">Favorites</h1>
 
       {loading ? (
         <p>Loading favorites...</p>
@@ -106,12 +106,12 @@ const Favorites: React.FC = () => {
                     <span>{averageRating} ({reviews.length})</span>
                   </div>
                 </div>
-                <h2 className="text-xl font-semibold mt-2">
+                <h2 className="text-xl opacity-70 font-semibold mt-2">
                   {property.title || 'No title available'}
                 </h2>
-                <p className="text-gray-600">{property.location}</p>
-                <p className="text-lg font-bold mt-2">
-                  £{property.price?.toLocaleString() || 'N/A'} / night
+                <p className="text-gray-600 text- font-sans pt-1">{property.location}</p>
+                <p className="text-lg mt-6">
+                  £ {property.price?.toLocaleString() || 'N/A'} <span className="opacity-60">/ night</span>
                 </p>
               </div>
             

@@ -1,18 +1,8 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../../../../prisma/client'; // Make sure you have a prisma client instance in your lib folder
-import fs from 'fs';
-import path from 'path';
-import { IncomingForm, File } from 'formidable';
-import { v4 as uuidv4 } from 'uuid';
-import { IncomingMessage } from 'http'; // Import IncomingMessage from 'http'
 
 
-// Setup formidable to handle file uploads
-export const config = {
-  api: {
-    bodyParser: false, // Disable Next.js body parsing for file uploads
-  },
-};
+
 
 export async function GET(req: Request) {
   const url = new URL(req.url);

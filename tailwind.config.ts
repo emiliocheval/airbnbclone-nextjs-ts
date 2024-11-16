@@ -1,4 +1,4 @@
-import type { Config } from "tailwindcss";
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -9,13 +9,8 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Roboto', 'sans-serif'], // Default font for body
-        heading: ['Open Sans', 'sans-serif'], // Font for headings
-      },
-      colors: {
-        background: "var(--background)",
-        foregrounda: "var(--foreground)",
-        'custom-turquoise': '#068488', // Add the custom turquoise color
+        sans: ['Montserrat', 'sans-serif'], // Body font
+        heading: ['Playfair Display', 'serif'], // Title font
       },
     },
   },

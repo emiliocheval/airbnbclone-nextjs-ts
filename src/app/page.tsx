@@ -6,7 +6,9 @@ import { Property } from "@/types/properties";
 import FilterModal from "../app/components/FilterModal";
 import { useUser } from "@clerk/nextjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { MdFilterList } from "react-icons/md";
+
 
 interface Filters {
   priceRange?: { min: number; max: number };
@@ -28,7 +30,7 @@ const HomePage: React.FC = () => {
       try {
         const response = await fetch("/api/properties");
         if (!response.ok) throw new Error("Failed to fetch properties");
-        
+
         const data: Property[] = await response.json();
         setProperties(data);
       } catch (error) {
@@ -45,8 +47,8 @@ const HomePage: React.FC = () => {
     if (isLoaded && user) {
       const checkUser = async () => {
         try {
-          const username = user.username || 'anonymous';
-    
+          const username = user.username || "anonymous";
+
           const response = await fetch("/api/auth/check-user", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -56,7 +58,7 @@ const HomePage: React.FC = () => {
               username: username,
             }),
           });
-    
+
           if (response.ok) {
             const data = await response.json();
             if (!data.exists) {
@@ -77,7 +79,7 @@ const HomePage: React.FC = () => {
           console.error("Error checking user:", error);
         }
       };
-  
+
       checkUser();
     }
   }, [isLoaded, user]);
@@ -87,33 +89,48 @@ const HomePage: React.FC = () => {
   };
 
   const filteredProperties = properties.filter((property) => {
-    const matchesSearch = 
+    const matchesSearch =
       property.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       property.location.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesPriceRange = 
+    const matchesPriceRange =
       !filters.priceRange ||
-      (property.price >= filters.priceRange.min && property.price <= filters.priceRange.max);
+      (property.price >= filters.priceRange.min &&
+        property.price <= filters.priceRange.max);
 
-    const matchesFeatures = 
+    const matchesFeatures =
       !filters.features ||
       Object.entries(filters.features).every(([feature, isChecked]) => {
-        const featureNormalized = feature.replace(/([A-Z])/g, " $1").toLowerCase().trim();
-        return !isChecked || property.propertyFeatures?.some(
-          (f) => f.toLowerCase() === featureNormalized
+        const featureNormalized = feature
+          .replace(/([A-Z])/g, " $1")
+          .toLowerCase()
+          .trim();
+        return (
+          !isChecked ||
+          property.propertyFeatures?.some(
+            (f) => f.toLowerCase() === featureNormalized
+          )
         );
       });
 
     const matchesServices =
       !filters.services ||
       Object.entries(filters.services).every(([service, isChecked]) => {
-        const normalizedService = service.replace(/([A-Z])/g, " $1").toLowerCase().trim();
-        return !isChecked || property.services?.some(
-          (propService) => propService.toLowerCase().includes(normalizedService)
+        const normalizedService = service
+          .replace(/([A-Z])/g, " $1")
+          .toLowerCase()
+          .trim();
+        return (
+          !isChecked ||
+          property.services?.some((propService) =>
+            propService.toLowerCase().includes(normalizedService)
+          )
         );
       });
 
-    return matchesSearch && matchesPriceRange && matchesFeatures && matchesServices;
+    return (
+      matchesSearch && matchesPriceRange && matchesFeatures && matchesServices
+    );
   });
 
   if (loading) {
@@ -122,22 +139,25 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="p-4">
-      <div className="flex items-center mb-4 border border-gray-300 rounded-md">
+      <div className="relative flex items-center mb-5 border bg-white border-gray-300 rounded-full">
+        <FontAwesomeIcon className="ml-2" icon={faMagnifyingGlass}/>
         <input
           type="text"
-          placeholder="Search..."
-          className="w-full p-2 rounded-l-md focus:outline-none"
+          placeholder="Where to?"
+          className="w-full p-2 pl-4 rounded-full focus:outline-none"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
         <button
           onClick={() => setIsFilterModalOpen(true)}
-          className="p-2 bg-teal-500 text-white rounded-r-md"
+          className=" p-3 h-10 w-10 bg-white text-black rounded-full outline outline-gray-200 outline-1"
           aria-label="Open Filters"
         >
-          <FontAwesomeIcon icon={faFilter} />
+          <MdFilterList  className='text-gray-600' />
+       
         </button>
       </div>
+
       <PropertyList properties={filteredProperties} />
       <FilterModal
         isOpen={isFilterModalOpen}

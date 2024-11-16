@@ -24,13 +24,13 @@ const SearchBar: React.FC = () => {
       <input
         type="text"
         placeholder="Search..."
-        className="w-full px-4 py-2 border rounded-l-md"
+        className="w-full px-4 py-2 border rounded-xl"
       />
 
       {/* Filter Button */}
       <button
         onClick={handleFilterClick}
-        className="px-4 py-2 bg-gray-200 rounded-r-md"
+        className="px-4 py-2 bg-gray-200 rounded-r-xl"
       >
         Filter
       </button>

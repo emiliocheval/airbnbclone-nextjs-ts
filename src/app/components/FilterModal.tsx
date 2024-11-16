@@ -90,7 +90,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
         <Range
           step={500}
           min={0}
-          max={10000}
+          max={15000}
           values={[priceRange.min, priceRange.max]}
           onChange={(values) =>
             setPriceRange({ min: values[0], max: values[1] })
@@ -98,7 +98,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
           renderTrack={({ props, children }) => {
             // Calculate the width of the filled track
             const filledWidth =
-              ((priceRange.max - priceRange.min) / (10000 - 0)) * 100;
+              ((priceRange.max - priceRange.min) / (15000 - 0)) * 100;
             return (
               <div
                 {...props}
@@ -114,7 +114,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
                 <div
                   style={{
                     position: "absolute",
-                    left: `${((priceRange.min - 0) / (10000 - 0)) * 100}%`, // This ensures the fill starts from the correct position
+                    left: `${((priceRange.min - 0) / (15000 - 0)) * 100}%`, // This ensures the fill starts from the correct position
                     top: "0",
                     height: "6px",
                     backgroundColor: "#4fd1c5", // Color of the filled part
@@ -163,7 +163,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
         {/* Property Features */}
         <div className="mb-4">
-          <label className="block font-medium mb-2">Property Features</label>
+          <label className="block font-bold mb-2">Property Features</label>
           <div className="space-y-1">
             {(Object.keys(features) as FeatureKey[]).map((feature) => (
               <div key={feature} className="flex items-center">
@@ -181,7 +181,7 @@ const FilterModal: React.FC<FilterModalProps> = ({
 
         {/* Services */}
         <div className="mb-4">
-          <label className="block font-medium mb-2">Services</label>
+          <label className="block font-bold mb-2">Services</label>
           <div className="space-y-1">
             {(Object.keys(services) as ServiceKey[]).map((service) => (
               <div key={service} className="flex items-center">
